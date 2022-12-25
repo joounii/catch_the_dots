@@ -1,10 +1,15 @@
+from ast import With
+import imp
 import pygame
 import sys
 import random
+import math
+from pygame.locals import *
 
 # FILE IMPORTS START::
 from start_variables import setup
 from icon_factory import get_image
+from enemy_movement import move_enemy
 # FILE IMPORTS END::
 
 # Constants
@@ -103,10 +108,20 @@ def gameLoop(ghost_speed, score, is_game_over, is_loop_running):
         if keys[pygame.K_DOWN]:
             player_rect.y += 5
 
-        
+        # check if player moves out of the map
+        if player_rect.x <= -25:
+            player_rect.x = WIDTH + 24
+        if player_rect.x >= WIDTH + 25:
+            player_rect.x = -24
+        if player_rect.y <= -25:
+            player_rect.y = HEIGHT + 24
+        if player_rect.y >= HEIGHT + 25:
+            player_rect.y = -24
+
         # Move the ghost/s
         for ghost_rect in ghosts:
             # TODO replace with ghost AI
+            
             if player_rect.x > ghost_rect.x:
                 ghost_rect.x += ghost_speed
             if player_rect.x < ghost_rect.x:
