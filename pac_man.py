@@ -20,12 +20,13 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 # Game dimensions
-WIDTH = 640
-HEIGHT = 480
+WIDTH = 900
+HEIGHT = 900
 
 # START VARIABLES START::
 start_variables = setup()
 
+player_speed = start_variables.get("player_speed")
 score = start_variables.get("score")
 ghost_speed = start_variables.get("ghost_speed")
 ghost_speedup = start_variables.get("ghost_speedup")
@@ -100,13 +101,13 @@ def gameLoop(ghost_speed, score, is_game_over, is_loop_running):
         # Move the player
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            player_rect.x -= 5
+            player_rect.x -= player_speed
         if keys[pygame.K_RIGHT]:
-            player_rect.x += 5
+            player_rect.x += player_speed
         if keys[pygame.K_UP]:
-            player_rect.y -= 5
+            player_rect.y -= player_speed
         if keys[pygame.K_DOWN]:
-            player_rect.y += 5
+            player_rect.y += player_speed
 
         # check if player moves out of the map
         if player_rect.x <= -25:
@@ -118,21 +119,16 @@ def gameLoop(ghost_speed, score, is_game_over, is_loop_running):
         if player_rect.y >= HEIGHT + 25:
             player_rect.y = -24
 
+
+        
         # Move the ghost/s
         for ghost_rect in ghosts:
             # TODO replace with ghost AI
+            new_x, new_y = move_enemy(player_rect.x, player_rect.y, ghost_rect.x, ghost_rect.y, ghost_speed)
+            # print(new_x, new_y)
+            ghost_rect.x += new_x
+            ghost_rect.y += new_y
             
-            if player_rect.x > ghost_rect.x:
-                ghost_rect.x += ghost_speed
-            if player_rect.x < ghost_rect.x:
-                ghost_rect.x -= ghost_speed
-            if player_rect.y > ghost_rect.y:
-                ghost_rect.y += ghost_speed
-            if player_rect.y < ghost_rect.y:
-                ghost_rect.y -= ghost_speed
-            if ghost_rect.right > WIDTH:
-                ghost_rect.left = 0
-        
         
         # Draw the screen
         screen.fill(BLACK)
